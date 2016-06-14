@@ -3,6 +3,8 @@ var ReactDOM = require('react-dom');
 
 var InitiativeTracker = require('../components/InitiativeTracker');
 
+var store = require('../store');
+
 var combatants = [
   { name: 'Iman', key: 'iman', initiativeBonus: 2 },
   { name: 'Murin', key: 'murin', initiativeBonus: -1 },

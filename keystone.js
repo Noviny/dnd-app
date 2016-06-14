@@ -25,12 +25,14 @@ keystone.set('locals', {
 	_: require('underscore'),
 	env: keystone.get('env'),
 	utils: keystone.utils,
-	editable: keystone.content.editable
+	editable: keystone.content.editable,
+	port: process.env.port || 8000
 });
 
 keystone.set('routes', require('./routes'));
 keystone.set('nav', {
-	'users': 'users'
+	'users': 'users',
+	'Main Lists': ['characters', 'enemies']
 });
 
 keystone.start();

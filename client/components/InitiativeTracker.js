@@ -6,7 +6,6 @@ import { d20 } from 'react-dice'
 const rollInitiative = (combatants) => {
   combatants.forEach(combatant => {
     combatant.initiative = d20(combatant.initiativeBonus);
-    console.log(combatant);
   });
   return combatants;
 }
@@ -70,9 +69,9 @@ class InitiativeTracker extends Component {
             <tr>
               <th>Name</th>
               <th>Initiative</th>
-              <th>Passive Perception</th>
-              <th>Passive Insight</th>
-              <th>Passive Investigation</th>
+              <th>Perception</th>
+              <th>Insight</th>
+              <th>Investigation</th>
             </tr>
           </thead>
           <tbody>
