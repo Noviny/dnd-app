@@ -1,5 +1,6 @@
 doctype html
 html
+	
 	//- HTML HEADER
 	head
 		meta(charset="utf-8")
@@ -11,10 +12,11 @@ html
 
 		//- Customise the stylesheet for your site by editing /public/styles/site.less
 		//- All .less files will be automatically compiled and minified in production.
-		link(href="/styles/site.min.css", rel="stylesheet")
+	link(href="/styles/site.min.css", rel="stylesheet")
 
 	//- HTML BODY
 	body
+		h1 Let's play DnD
 		#app
 		script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCBroD1_P_WPvdhf3uyBxRzPiRbKvLiLBk')
-		script(src='/js/application.js')
+		script(src='/bundle/index_bundle.js')

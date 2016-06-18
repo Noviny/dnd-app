@@ -11,6 +11,7 @@ module.exports = (req, res) => {
   Character.model.find({ isPartyMember: true })
     .exec((err, characters) => {
       if (err || !characters) return error();
+      console.log(characters);
       output.characters = characters;
       success();
     })

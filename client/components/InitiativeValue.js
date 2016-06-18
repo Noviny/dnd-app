@@ -9,7 +9,7 @@ class InitiativeValue extends Component {
         <td><input type="number"
           value={this.props.initiative}
           onChange={(e) => { this.props.setInitiativeValue(this.props.name, e.target.value) } }
-          style={{ maxWidth: '60px', textAlign: 'center' }}
+          style={{ maxWidth: '30px', textAlign: 'center', border: 'none' }}
         /></td>
         <td>{this.props.perception}</td>
         <td>{this.props.insight}</td>

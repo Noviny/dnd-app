@@ -1,34 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { newRoll } from 'react-dice'
 import InitiativeValue from './InitiativeValue';
-
-import { d20 } from 'react-dice'
+import { fetchCharacters } from '../requests'
 
 const rollInitiative = (combatants) => {
   combatants.forEach(combatant => {
-    combatant.initiative = d20(combatant.initiativeBonus);
+    let initModifier = combatant.initiativeBonus + combatant.dexMod
+    combatant.initiative = newRoll(1, 20, initModifier).total;
   });
   return combatants;
 }
-
-const sortCombatants = (combatants) => {
-  var sortedCombatants = combatants.sort((a, b) => {
-    if (a.initiative < b.initiative) {
-      return 1;
-    }
-    if (a.initiative > b.initiative) {
-      return -1;
-    }
-    if (a.initiativeBonus < b.initiativeBonus) {
-      return 1;
-    }
-    if (a.initiativeBonus > b.initiativeBonus) {
-      return -1;
-    }
-    return Math.round(Math.random());
-  });
-
-  return sortedCombatants;
-};
 
 class InitiativeTracker extends Component {
   constructor () {
@@ -38,30 +20,32 @@ class InitiativeTracker extends Component {
   }
 
   componentWillMount () {
-    let combatants = rollInitiative(this.props.combatants);
-    this.setState({
-      combatants: sortCombatants(combatants),
-    });
+    fetchCharacters((err, characters) => {
+      if (err || !characters) return console.error('error:', err);
+      this.props.dispatch({ type: 'SET_CHARACTERS', characters });
+      let combatants = rollInitiative(characters.concat(this.props.enemies));
+      this.props.dispatch({ type: 'SORT_COMBATANTS', combatants });
+    })
+
   };
 
   handleInitiativeUpdate (combatantName, newValue) {
-    var { combatants } = this.state;
+    var { combatants } = this.props;
     combatants.forEach(c => {
-      if (c.name === combatantName) {
-        c.initiative = newValue;
+      if (c.name.first === combatantName) {
+        c.initiative = parseInt(newValue);
       }
     })
-    this.setState({ combatants: sortCombatants(combatants) });
+    this.props.dispatch({ type: 'SORT_COMBATANTS', combatants });
   };
 
   rerollInitiative () {
     let combatants = rollInitiative(this.props.combatants);
-    this.setState({
-      combatants: sortCombatants(combatants),
-    });
+    this.props.dispatch({ type: 'SORT_COMBATANTS', combatants })
   };
 
   render () {
+    console.log(this.props);
     return (
       <div>
         <table>
@@ -75,12 +59,12 @@ class InitiativeTracker extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.combatants.map((combatant, i) => {
+            {this.props.combatants.map((combatant, i) => {
               return <InitiativeValue
-                name={combatant.name}
+                name={combatant.name.first}
                 initiative={combatant.initiative}
                 setInitiativeValue={this.handleInitiativeUpdate}
-                key={combatant.name}
+                key={combatant.name.first}
               />
             })}
           </tbody>
@@ -90,6 +74,17 @@ class InitiativeTracker extends Component {
     )
   };
 };
+const mapStateToProps = state => {
+	return Object.assign(
+    {},
+    {
+      combatants: state.combatants,
+      characters: state.characters,
+      enemies: state.enemies,
+      randomNum: Math.random(),
+    },
+  );
+}
 
 
-module.exports = InitiativeTracker;
+module.exports = connect(mapStateToProps)(InitiativeTracker);
