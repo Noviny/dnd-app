@@ -1,13 +1,13 @@
 var keystone = require('keystone');
 var transform = require('model-transform');
 var Types = keystone.Field.Types;
-// var generateRoll = require('react-dice').generateRoll;
+// var roll = require('react-dice').roll;
 
-var Enemy = new keystone.List('Enemy', {
-	autokey: { from: 'name.first', path: 'key', unique: true }
+var Creature = new keystone.List('Creature', {
+	autokey: { from: 'name.first', path: 'key', unique: true },
 });
 
-Enemy.add({
+Creature.add({
 	name: { type: Types.Name, required: true, index: true },
 	level: { type: Number, default: 1, initial: true },
 }, 'Stats', {
@@ -26,7 +26,6 @@ Enemy.add({
 	chaMod: { type: Number, noedit: true, hidden: true },
 }, 'Random Things', {
 	profBonus: { type: Number, default: 2, noedit: true, hidden: true },
-	proficiencies: { type: Types.Relationship, ref: 'Proficiency', many: true },
 	hitDice: { type: Number, initial: true, required: true },
 	initiativeBonus: { type: Number, default: 0, required: true },
 	armorBonus: { type: Number, default: 0, required: true },
@@ -38,7 +37,7 @@ Enemy.add({
 });
 
 
-Enemy.schema.pre('save', function (next) {
+Creature.schema.pre('save', function (next) {
 	this.strMod = Math.floor((this.strength - 10) / 2);
 	this.dexMod = Math.floor((this.dexterity - 10) / 2);
 	this.conMod = Math.floor((this.constitution - 10) / 2);
@@ -48,7 +47,7 @@ Enemy.schema.pre('save', function (next) {
 	next();
 });
 
-Enemy.schema.pre('save', function (next) {
+Creature.schema.pre('save', function (next) {
 	if (this.level < 5) this.profBonus = 2;
 	else if (this.level < 8) this.profBonus = 3;
 	else if (this.level < 13) this.profBonus = 4;
@@ -58,16 +57,16 @@ Enemy.schema.pre('save', function (next) {
 });
 
 
-Enemy.schema.virtual('initiativeModifier').get(function () {
+Creature.schema.virtual('initiativeModifier').get(function () {
 	if (this.initiativeBonus) return this.initiativeBonus + this.dexMod;
 	return this.dexMod;
 });
 
-Enemy.schema.virtual('hitPoints').get(function () {
-	return generateRoll(level, hitDice, (level * conMod)).total;
+Creature.schema.virtual('hitPoints').get(function () {
+	return roll(level, hitDice, (level * conMod)).total;
 });
 
-transform.toJSON(Enemy);
+transform.toJSON(Creature);
 
-Enemy.defaultColumns = 'name, key';
-Enemy.register();
+Creature.defaultColumns = 'name, key';
+Creature.register();

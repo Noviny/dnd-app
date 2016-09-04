@@ -26,13 +26,15 @@ keystone.set('locals', {
 	env: keystone.get('env'),
 	utils: keystone.utils,
 	editable: keystone.content.editable,
-	port: process.env.port || 8000
+	port: process.env.port || 8000,
 });
 
 keystone.set('routes', require('./routes'));
 keystone.set('nav', {
 	'users': 'users',
-	'Main Lists': ['characters', 'enemies']
+	'characters': 'characters',
+	'details': ['races', 'classes', 'abilities', 'spells'],
+	'DM': ['creatures', 'encounters'],
 });
 
 keystone.start();

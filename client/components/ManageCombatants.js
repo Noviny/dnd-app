@@ -3,6 +3,10 @@ import HitpointTracker from './HitpointTracker';
 import { connect } from 'react-redux';
 
 class ManageCombatants extends Component {
+	constructor () {
+		super();
+		this.updateHP = this.updateHP.bind(this);
+	}
 
 	componentWillMount () {
 		this.props.dispatch({ type: 'SET_CURRENT_ENEMY_HIT_POINTS' });
@@ -10,8 +14,8 @@ class ManageCombatants extends Component {
 
 	updateHP (newVal, key) {
 		this.props.dispatch({
-			type: 'SET_HITPOINTS',
-			newVal,
+			type: 'UPDATE_HITPOINTS',
+			currentHP: parseInt(newVal),
 			key,
 		});
 	}
@@ -20,13 +24,15 @@ class ManageCombatants extends Component {
 	render () {
 		return (
 			<div>
-				{this.props.enemies.map((enemy, i) => {
+				{this.props.characters.map((character, i) => {
 					return (
-						<div key={enemy.key}>
-							{enemy.name.first}:
+						<div
+							key={character.key}
+							style={{ border: '1px' }}
+						>
 							<HitpointTracker
-								person={enemy}
-								updateHP={(value, key) => { this.updateHP(value, key) }}
+								character={character}
+								updateHP={this.updateHP}
 							/>
 						</div>
 					);
@@ -40,7 +46,9 @@ const mapStateToProps = state => {
 	return Object.assign(
 		{},
 		{
-			enemies: state.enemies,
+			characters: state.characters.filter(char => {
+				return char.trackHP;
+			}),
 		}
 	);
 };

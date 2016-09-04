@@ -1,13 +1,16 @@
 import { createStore } from 'redux';
 
 import { newRoll } from 'react-dice';
+import reactDice from 'react-dice';
+console.log('All react dice', reactDice);
 
 const initialState = {
 	characters: [],
 	enemies: [
-		{ name: { first: 'Revenant 1' }, key: 'rev1', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
-		{ name: { first: 'Revenant 2' }, key: 'rev2', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
-		{ name: { first: 'Revenant 3' }, key: 'rev3', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
+		// The revenants
+		// { name: { first: 'Revenant 1' }, key: 'rev1', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
+		// { name: { first: 'Revenant 2' }, key: 'rev2', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
+		// { name: { first: 'Revenant 3' }, key: 'rev3', initiativeBonus: 0, dexMod: 2, maxHP: newRoll(16, 8, 64).total },
 	],
 	combatants: [],
 };
@@ -22,6 +25,7 @@ const encounter = (state = initialState, action) => {
 			// TODO: Make this actually retrieve a set of enemy stat blocks from DB.
 			// What you want is a fetch request based on a list of names, and to populate
 			// The right number of fields
+			return Object.assign({}, state);
 		case 'SORT_COMBATANTS':
 			return Object.assign(
 				{},
@@ -73,7 +77,7 @@ const encounter = (state = initialState, action) => {
 			const newActivePlayer = {};
 			state.combatants.forEach((combatant, i, a) => {
 				if (combatant.key === state.activePlayer) {
-					if (i < a.length - 1) return newActivePlayer.activePlayer = a[i +1 ].key;
+					if (i < a.length - 1) return newActivePlayer.activePlayer = a[i + 1].key;
 					return newActivePlayer.activePlayer = a[0].key;
 				}
 			});

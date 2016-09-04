@@ -11,12 +11,11 @@ class InitiativeValue extends Component {
 				<td>{this.props.name}</td>
 				<td><input type="number"
 					value={this.props.initiative}
-					onChange={(e) => { this.props.setInitiativeValue(this.props.key, e.target.value) } }
+					onChange={(e) => { this.props.setInitiativeValue(this.props.keyVal, e.target.value); }}
 					style={{ textAlign: 'center', border: 'none' }}
 				/></td>
-				<td>{this.props.perception}</td>
-				<td>{this.props.insight}</td>
-				<td>{this.props.investigation}</td>
+				<td onClick={() => { this.props.rollInitiative(this.props.keyVal); }}>CLICK</td>
+				<td onClick={() => { this.props.hideChar(this.props.keyVal); }}>X</td>
 			</tr>
 		);
 	}

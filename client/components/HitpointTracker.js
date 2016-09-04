@@ -2,37 +2,48 @@ import React, { Component } from 'react';
 
 class HitpointTracker extends Component {
 	// TODO: Make this work, make damagePending a thing, allow it to be updated
+	constructor () {
+		super();
+		this.updateDamagePending = this.updateDamagePending.bind(this);
+		this.dealDamage = this.dealDamage.bind(this);
+		this.state = { damagePending: 0 };
+	}
+
+	updateDamagePending (e) {
+		this.setState({ damagePending: e.target.value });
+	}
+
 	dealDamage (e) {
 		e.preventDefault();
-		const newHPVal = this.props.person.currentHP - this.props.person.damagePending;
-		this.props.updateHP(newHPVal, this.props.person.key);
-		this.props.updateDamagePending(0, this.props.person.key);
+		const newHPVal = this.props.character.currentHP - this.state.damagePending;
+		this.props.updateHP(newHPVal, this.props.character.key);
 	}
 
 	render () {
-		const person = this.props.person;
+		const character = this.props.character;
 
 		const inputStyle = {
 			textAlign: 'center',
 		};
 
-		const isBloodied = (person.currentHP <= person.maxHP / 2);
+		const isBloodied = (character.currentHP <= character.maxHP / 2);
 
 		if (isBloodied) inputStyle.color = 'red';
 
 		return (
 			<div>
+				{character.name}:
 				<input
 					type="number"
-					value={person.currentHP}
-					onChange={(e) => this.props.updateHP(e.target.value, person.key)}
+					value={character.currentHP}
+					onChange={(e) => this.props.updateHP(e.target.value, character.key)}
 					style={inputStyle}
-				/> /{person.maxHP} -
-				<form onSubmit={(e) => {this.dealDamage(e)}}>
+				/> /{character.maxHP} -
+				<form onSubmit={this.dealDamage}>
 					<input
 						type="number"
-						value={person.damagePending || 0}
-						onChange={(e) => this.props.updateDamagePending(e.target.value, person.key)}
+						value={this.state.damagePending}
+						onChange={this.updateDamagePending}
 						style={inputStyle}
 					/>
 				</form>

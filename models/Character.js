@@ -3,7 +3,7 @@ var transform = require('model-transform');
 var Types = keystone.Field.Types;
 
 var Character = new keystone.List('Character', {
-	autokey: { from: 'name.first', path: 'key', unique: true }
+	autokey: { from: 'name.first', path: 'key', unique: true },
 });
 
 Character.add({
@@ -31,20 +31,17 @@ Character.add({
 		default: 'Bard',
 		required: true,
 		initial: true,
-		label: 'Class'
+		label: 'Class',
 	},
 	startingClassLevel: { type: Number, required: true, default: 1 },
 }, 'Multiclass', {
-	isMulticlass: { type: Boolean, default: false },
-	secondClass: {
+	otherClasses: { type: Types.List, fields: {
 		class: {
 			type: Types.Relationship,
 			ref: 'Class',
-			required: false,
-			dependsOn: { isMulticlass: true },
 		},
-		level: { type: Number, required: false,	dependsOn: { isMulticlass: true }, },
-	},
+		level: { type: Number, required: false,	dependsOn: { isMulticlass: true } },
+	} },
 }, 'Race Info', {
 	race: {
 		type: Types.Relationship,
@@ -55,7 +52,6 @@ Character.add({
 }, 'Random Things', {
 	initiativeBonus: { type: Number, default: 0 },
 	profBonus: { type: Number, default: 2, noedit: true, hidden: true },
-	proficiencies: { type: Types.Relationship, ref: 'Proficiency', many: true },
 });
 
 
